@@ -4,6 +4,7 @@
 
     import { goto } from '$app/navigation';
     function GoBack() {goto('/')}
+    function toDraw() {goto('/draw')}
 </script>
 
 <button class="btn btn-primary" onclick={GoBack}>Go Back</button>
@@ -23,7 +24,7 @@
         </select>
     </div>
 
-    <button class="btn btn-neutral">Create Mural</button>
+    <button class="btn btn-neutral" onclick={toDraw}>Create Mural</button>
     
 </div>
 
