@@ -1,14 +1,11 @@
+export class Tile {
+    id: string;
+    muralId: number;
+    position: { x: number, y: number };
 
-class Tile {
-	artistName: string
-	artistRegion: string
-	// content: // Custom Data Type to be added later
-  
-	constructor(artistName: string, artistRegion: string) {
-	  this.artistName = artistName
-	  this.artistRegion = artistRegion
-
-	}
-  }
-  
-  export default Tile
+    constructor(id: string, muralId: number, position: { x: number, y: number }) {
+        this.id = id;
+        this.muralId = muralId;
+        this.position = position;
+    }
+}
