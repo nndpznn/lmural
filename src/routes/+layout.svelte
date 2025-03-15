@@ -1,6 +1,8 @@
 <script lang="ts">
-	import '../app.css';
-	let { children } = $props();
+	import "../app.css"; // Keep this to ensure global styles are applied
 </script>
 
-{@render children()}
+<div id="canvas"></div>
+<div id="pattern"></div>
+
+<slot />

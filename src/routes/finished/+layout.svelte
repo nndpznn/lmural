@@ -1,6 +1,10 @@
 <script lang="ts">
-	import '../../app.css';
-	let { children } = $props();
+	// Example: Sidebar or additional UI components for dashboard pages
 </script>
 
-{@render children()}
+<div class="dashboard-container">
+	<aside class="sidebar">Sidebar Content</aside>
+	<main class="content">
+		<slot />
+	</main>
+</div>
