@@ -86,13 +86,13 @@
     });
   </script>
   
-  <select bind:value={sortBy} on:change={sortMurals}>
-    <option value="created_at">Oldest</option>
+  <select bind:value={sortBy} on:change={sortMurals} class = "select select-neutral">
+    <option value="createdAt">Oldest</option>
     <option value="remainingTiles">Remaining Tiles</option>
     <option value="hostName">Author Name</option>
     <option value="theme">Theme</option>
   </select>
-  <select bind:value={sortOrder} on:change={sortMurals}>
+  <select bind:value={sortOrder} on:change={sortMurals} class = "select select-neutral">
     <option value="asc">Ascending</option>
     <option value="desc">Descending</option>
   </select>
