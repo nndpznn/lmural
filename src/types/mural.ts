@@ -1,12 +1,10 @@
 import { supabase } from "$lib/supabaseClient"
-import Tile from "./tile"
 
 class Mural {
 	id: number
 	hostName: string
 	hostRegion: string
 	dims: [number, number]
-	tiles: string[]             // tiles is a string array of all tile IDs in order. if a tile is uninitialized, it is simply ""
 	finished: boolean
   
 	constructor(hostName: string = "Anon Guest", hostRegion: string = "Antarctica", dims: [number, number]) {
@@ -14,7 +12,6 @@ class Mural {
 	  this.hostName = hostName // created by joining first name last initial together
 	  this.hostRegion = hostRegion
 	  this.dims = dims
-	  this.tiles = new Array(dims[0]*dims[1]).fill("")
 	  this.finished = false
 	}
 
@@ -26,7 +23,6 @@ class Mural {
 			  hostName: this.hostName,
 			  hostRegion: this.hostRegion,
 			  dims: this.dims,
-			  tiles: this.tiles,
 			  finished: this.finished,	
 			}
 		  ])
