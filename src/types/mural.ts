@@ -1,5 +1,4 @@
 import { supabase } from "$lib/supabaseClient"
-import Tile from "./tile"
 
 class Mural {
 	id: number
@@ -16,10 +15,14 @@ class Mural {
 	  this.hostRegion = hostRegion
 	  this.dims = dims
 	  this.theme = theme
-	  this.remainingTiles = 0
+	  this.remainingTiles = dims[0] * dims[1]
 	  this.finished = false
 	}
 
+	updateRemainingTiles(completedTiles: number) {
+		this.remainingTiles = (this.dims[0] * this.dims[1]) - completedTiles
+	}
+	
 	async create() {
 		const { data, error } = await supabase
 		  .from("murals")
