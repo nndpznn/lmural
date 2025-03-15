@@ -39,7 +39,9 @@
 
 <style>
     h1 {
-        animation: wobble 2s infinite ease-in-out;
+        /* animation: wobble 2s infinite ease-in-out; */
+        transform-origin: center;
+        /* overflow-x: hidden; */
     }
 
     @keyframes wobble {
