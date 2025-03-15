@@ -1,9 +1,36 @@
-<script>
-    let muralTheme = ""
-    let dims = ""
-
+<script lang="ts">
     import { goto } from '$app/navigation';
+    import { page } from '$app/stores';
+    import Mural from '../../types/mural';
+
+    let muralTheme = ""
+    let username = ""
+    let region = ""
+    let dims: "2 x 2" | "3 x 3" | "4 x 4" = "2 x 2"; 
+    let dimensions: [number, number] = [2, 2]
+
+    const dimensionMap: Record<"2 x 2" | "3 x 3" | "4 x 4", number[]> = {
+        "2 x 2": [2, 2],
+        "3 x 3": [3, 3],
+        "4 x 4": [4, 4],
+    };
+
+    $: dimensions = dimensionMap[dims] as [number, number];
+    
     function GoBack() {goto('/')}
+    function Create() {
+        goto('/draw')
+        let mural = new Mural(username, region, dimensions, muralTheme);
+        mural.create()
+    }
+
+    // Extract query params from the URL
+    const unsubscribe = page.subscribe(($page) => {
+        const params = new URLSearchParams($page.url.search);
+        username = params.get("username") || "";
+        region = params.get("region") || "";
+    });
+
 </script>
 
 <button class="btn btn-primary" onclick={GoBack}>Go Back</button>
@@ -22,8 +49,9 @@
             <option>4 x 4</option>
         </select>
     </div>
+    <p>{username}</p>
 
-    <button class="btn btn-neutral">Create Mural</button>
+    <button class="btn btn-neutral" onclick={Create}>Create Mural</button>
     
 </div>
 
