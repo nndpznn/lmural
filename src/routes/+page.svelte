@@ -1,18 +1,50 @@
 <script>
-    // Component logic (if any)
+    import { goto } from '$app/navigation';
+
+    let username = ""
+    let region = ""
+
+    function CreateMural() { goto('/create') }
+    function JoinMural() { goto('/active') }
+    function ViewMurals() { goto('/finished') }
+
 </script>
 
 <div class="container">
-    <h1 class="text-8xl">LMUral Splash Page</h1>
-    <p>
+    <h1 class="text-8xl font-bold text-blue-300">LMUral Splash Page</h1>
+    <!-- <p>
         Visit <a href="https://svelte.dev/docs/kit" target="_blank"
             >SvelteKit Documentation</a
         >
-    </p>
+    </p> -->
 </div>
 
 <!-- Background animation covering the whole screen -->
 <div id="canvas"></div>
+
+<div class="general_container">
+
+    <!-- Login Contatiner -->
+    <div class="login_container">
+        <input bind:value={username} type="text" placeholder="Username" class="input input-neutral">
+        <select bind:value={region} class="select select-neutral">
+            <option value="">Africa</option>
+            <option value="">Antarctica</option>
+            <option value="">Asia</option>
+            <option value="">Australia</option>
+            <option value="">Europe</option>
+            <option value="">North America</option>
+            <option value="">South America</option>
+        </select>
+    </div>
+
+    <!-- Game Option Container -->
+    <div class="game_container">
+        <button class="btn btn-primary" onclick={CreateMural}>Create New Mural</button>
+        <button class="btn btn-primary" onclick={JoinMural}>Join Existing Mural</button>
+        <button class="btn btn-primary" onclick={ViewMurals}>View Finished Murals</button>
+    </div>
+</div>
 
 <style>
     h1 {
@@ -65,17 +97,46 @@
     .container {
         display: flex;
         flex-direction: column;
-        align-items: center; /* Centers horizontally */
+        align-items: center; 
         text-align: center;
         gap: 20px;
         padding: 50px;
-        position: absolute; /* Keeps it positioned relative to the viewport */
-        top: 50px; /* Adjust this value as needed for spacing from the top */
+        position: absolute; 
+        top: 50px; 
         left: 50%;
-        transform: translateX(-50%); /* Only shift horizontally */
+        transform: translateX(-50%); 
         width: 100%;
         max-width: 90vw;
         z-index: 1;
+    }
+
+    .login_container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 30px;
+    }
+
+    .general_container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column; 
+        align-items: center;
+        gap: 20px; 
+
+    }
+
+    .game_container {
+        display: flex;
+        gap: 25px; 
+    }
+
+    .input {
+       margin: 10px;
     }
 
     a {

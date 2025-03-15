@@ -1,3 +1,3 @@
 <a href="/">go back</a>
 
-<p>active page</p>
+<p>create page</p>
