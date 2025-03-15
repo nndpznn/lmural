@@ -1,8 +1,10 @@
 <script>
+    import { goto } from '$app/navigation';
+
     let username = ""
     let region = ""
 
-    function CreateMural() { console.log("Going to CREATE MURAL page") }
+    function CreateMural() { goto('/create_mural') }
     function JoinMural() { console.log("Going to JOIN MURAL page") }
     function ViewMurals() { console.log("Going to VIEW MURAL page") }
 
