@@ -5,13 +5,13 @@ class Mural {
 	host: User
 	dims: [number, number]
 	tiles: Tile[]
-
-	// location: Coordinates (later)
+	finished: boolean
   
 	constructor(host: User, dims: [number, number]) {
 	  this.host = host
 	  this.dims = dims
 	  this.tiles = []
+	  this.finished = false
 	}
   }
   
