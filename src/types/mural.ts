@@ -33,7 +33,7 @@ class Mural {
 			  dims: this.dims,
 			  theme: this.theme,
 			  remainingTiles: this.remainingTiles,
-			  finished: this.finished,	
+			  finished: this.finished
 			}
 		  ])
 		  .select("id")
