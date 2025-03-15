@@ -3,7 +3,7 @@
 </script>
 
 <div class="dashboard-container">
-	<aside class="sidebar">Sidebar Content</aside>
+	<!-- <aside class="sidebar">Sidebar Content</aside> -->
 	<main class="content">
 		<slot />
 	</main>
