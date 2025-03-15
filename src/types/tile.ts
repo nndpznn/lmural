@@ -1,11 +1,11 @@
-import User from "./user";
-
 class Tile {
-  artist: User;
+  artistName: string;
+  artistRegion: string;
   // content: // Custom Data Type to be added later
 
-  constructor(artist: User) {
-    this.artist = artist;
+  constructor(artistName: string, artistRegion: string) {
+    this.artistName = artistName;
+    this.artistRegion = artistRegion;
   }
 }
 
