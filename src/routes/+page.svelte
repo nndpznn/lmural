@@ -43,7 +43,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: url("/background_overlay.png") top left;
+        background: rgb(36, 70, 182) url("/background_overlay.png") top left;
         background-size: auto;
         background-repeat: repeat;
         animation: panning 10s infinite linear;
@@ -65,11 +65,16 @@
     .container {
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: center; /* Centers horizontally */
         text-align: center;
         gap: 20px;
         padding: 50px;
-        position: relative;
+        position: absolute; /* Keeps it positioned relative to the viewport */
+        top: 50px; /* Adjust this value as needed for spacing from the top */
+        left: 50%;
+        transform: translateX(-50%); /* Only shift horizontally */
+        width: 100%;
+        max-width: 90vw;
         z-index: 1;
     }
 
