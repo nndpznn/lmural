@@ -4,8 +4,9 @@
     import {fade} from 'svelte/transition'
 
     let started_drawing = $state(false);
-    let music_on = $state(true)
-    let sound_on = $state(true)
+    let music_on = $state(true);
+    let sound_on = $state(true);
+    let editor_reference = null;
 
     // thanks stackoverflow
     // https://stackoverflow.com/questions/69874742/sveltekit-console-error-window-is-not-defined-when-i-import-library
@@ -34,13 +35,11 @@
         editor.toolController.removeAndDestroyTools(panZoomTools);
         const penTools = editor.toolController.getMatchingTools(draw_lib.PenTool).slice(1, 3);
         editor.toolController.removeAndDestroyTools(penTools);
-        
+
         const toolbar = editor.addToolbar(true);
-        toolbar.addSaveButton(() => {
-            const svgElem = editor.toSVG();
-            console.log('Saved SVG to:', svgElem.outerHTML);
-        });
         started_drawing = true;
+
+        editor_reference = editor;
 
         if (sound_on) {
             const start_sound = document.getElementById("sound_start");
@@ -64,9 +63,17 @@
         const tunes = document.getElementById("tunes");
         if (tunes) {
             setInterval(() => {
-                (tunes as HTMLAudioElement).volume -= 0.05;
+                if ((tunes as HTMLAudioElement).volume > 0.5){
+                    (tunes as HTMLAudioElement).volume -= 0.05;
+                }
+                else{
+                    (tunes as HTMLAudioElement).pause();
+                }
             }, 100);
         }
+
+        const svgElem = editor_reference.toSVG();
+        console.log('Saved SVG to:', svgElem.outerHTML);
 
         // FINISH THIS
     }
@@ -98,7 +105,7 @@
     <source src="/type_finish.wav" type="audio/wav">
 </audio>
 
-<h2>Draw your tile!</h2>
+<h1 class="text-5xl font-bold">Draw your tile!</h1>
 <div class="draw"></div>
 
 {#if !started_drawing}
@@ -122,13 +129,12 @@
         margin: auto;
     }
 
-    h2 {
-        font-size: larger;
+    h1 {
         padding: 40px
     }
 
     .buttons {
-        padding: 40px;
+        padding: 20px;
         display: flex;
         width: 500px;
         margin: auto;
