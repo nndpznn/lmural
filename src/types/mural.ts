@@ -6,8 +6,8 @@ class Mural {
 	hostName: string
 	hostRegion: string
 	dims: [number, number]
-	tiles: string[]             // tiles is a string array of all tile IDs in order. if a tile is uninitialized, it is simply ""
 	theme: string
+	remainingTiles: number
 	finished: boolean
   
 	constructor(hostName: string = "Anon Guest", hostRegion: string = "Antarctica", dims: [number, number], theme: string = "") {
@@ -15,8 +15,8 @@ class Mural {
 	  this.hostName = hostName // created by joining first name last initial together
 	  this.hostRegion = hostRegion
 	  this.dims = dims
-	  this.tiles = new Array(dims[0]*dims[1]).fill("")
 	  this.theme = theme
+	  this.remainingTiles = 0
 	  this.finished = false
 	}
 
@@ -28,8 +28,8 @@ class Mural {
 			  hostName: this.hostName,
 			  hostRegion: this.hostRegion,
 			  dims: this.dims,
-			  tiles: this.tiles,
 			  theme: this.theme,
+			  remainingTiles: this.remainingTiles,
 			  finished: this.finished,	
 			}
 		  ])
