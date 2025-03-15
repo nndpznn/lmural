@@ -1,14 +1,15 @@
-import User from "./user"
 import Tile from "./tile"
 
 class Mural {
-	host: User
+	hostName: string
+	hostRegion: string
 	dims: [number, number]
 	tiles: Tile[]
 	finished: boolean
   
-	constructor(host: User, dims: [number, number]) {
-	  this.host = host
+	constructor(hostName: string = "Anon Guest", hostRegion: string = "Antarctica", dims: [number, number]) {
+	  this.hostName = hostName
+	  this.hostRegion = hostRegion
 	  this.dims = dims
 	  this.tiles = []
 	  this.finished = false
