@@ -29,6 +29,7 @@ class Mural {
 			  hostRegion: this.hostRegion,
 			  dims: this.dims,
 			  tiles: this.tiles,
+			  theme: this.theme,
 			  finished: this.finished,	
 			}
 		  ])
