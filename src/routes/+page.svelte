@@ -4,9 +4,9 @@
     let username = ""
     let region = ""
 
-    function CreateMural() { goto('/create_mural') }
-    function JoinMural() { console.log("Going to JOIN MURAL page") }
-    function ViewMurals() { console.log("Going to VIEW MURAL page") }
+    function CreateMural() { goto('/create') }
+    function JoinMural() { goto('/active') }
+    function ViewMurals() { goto('/finished') }
 
 </script>
 
@@ -40,9 +40,9 @@
 
     <!-- Game Option Container -->
     <div class="game_container">
-        <button class="btn btn-primary" onclick="{CreateMural}">Create New Mural</button>
-        <button class="btn btn-primary" onclick="{JoinMural}">Join Existing Mural</button>
-        <button class="btn btn-primary" onclick="{ViewMurals}">View Finished Murals</button>
+        <button class="btn btn-primary" onclick={CreateMural}>Create New Mural</button>
+        <button class="btn btn-primary" onclick={JoinMural}>Join Existing Mural</button>
+        <button class="btn btn-primary" onclick={ViewMurals}>View Finished Murals</button>
     </div>
 </div>
 
