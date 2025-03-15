@@ -8,7 +8,7 @@ class Mural {
 	theme: string
 	remainingTiles: number
 	finished: boolean
-  
+	
 	constructor(hostName: string = "Anon Guest", hostRegion: string = "Antarctica", dims: [number, number], theme: string = "") {
 	  this.id = 0
 	  this.hostName = hostName // created by joining first name last initial together

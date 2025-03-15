@@ -2,23 +2,26 @@
     import { onMount } from 'svelte';
     import { supabase } from '$lib/supabaseClient';
     import Mural from '../../types/mural';
-    import Tile from '../../types/tile';
   
     let murals: Mural[] = [];
-    let tiles: Tile[] = [];
     let sortedMurals: Mural[] = [];
     let sortBy: 'createdAt' | 'remainingTiles' | 'hostName' | 'theme' = 'createdAt';
     let sortOrder: 'asc' | 'desc' = 'asc';
     let userName: string = 'Guest'; // Replace with actual user handling
     let loading: boolean = true;
     let error: string | null = null;
+    let joinableMurals: Record<number, boolean> = {};
   
     async function fetchMurals(): Promise<void> {
       try {
-        const { data, error } = await supabase.from('murals').select('*');
+        const { data, error } = await supabase
+          .from('murals')
+          .select('*')
+          .order(sortBy, { ascending: sortOrder === 'asc' });
+        
         if (error) throw error;
         murals = data;
-        sortMurals();
+        await updateJoinableMurals();
       } catch (err) {
         error = (err as Error).message;
         console.error('Error fetching murals:', err);
@@ -27,72 +30,56 @@
       }
     }
   
-    async function fetchTiles(): Promise<void> {
+    async function updateJoinableMurals(): Promise<void> {
+      const muralIds = murals.map(m => m.id);
       try {
-        const { data, error } = await supabase.from('tiles').select('*');
+        const { data, error } = await supabase
+          .from('tiles')
+          .select('muralId, artistName')
+          .in('muralId', muralIds)
+          .eq('artistName', userName);
+        
         if (error) throw error;
-        tiles = data;
+        const joinedMuralIds = new Set(data.map(tile => tile.muralId));
+        joinableMurals = murals.reduce((acc, mural) => {
+          acc[mural.id] = !joinedMuralIds.has(mural.id);
+          return acc;
+        }, {} as Record<number, boolean>);
       } catch (err) {
-        error = (err as Error).message;
-        console.error('Error fetching tiles:', err);
+        console.error('Error checking mural participation:', err);
       }
     }
   
-    function sortMurals(): void {
-      sortedMurals = [...murals].sort((a, b) => {
-        if (sortBy === 'remainingTiles' || sortBy === 'createdAt') {
-          return sortOrder === 'asc' ? a[sortBy] - b[sortBy] : b[sortBy] - a[sortBy];
-        } else {
-          return sortOrder === 'asc' ? a[sortBy].localeCompare(b[sortBy]) : b[sortBy].localeCompare(a[sortBy]);
-        }
-      });
-    }
-  
-    function canJoinMural(muralId: number): boolean {
-      return !tiles.some(tile => tile.muralId === muralId && tile.artistName === userName);
-    }
-  
-    function recursiveTileCheck(muralId: number, artistName: string, remainingTiles: Tile[]): boolean {
-      if (remainingTiles.length === 0) return true;
-      const [tile, ...rest] = remainingTiles;
-      if (tile.muralId === muralId && tile.artistName === artistName) return false;
-      return recursiveTileCheck(muralId, artistName, rest);
-    }
-  
-    function canJoinMuralRecursive(muralId: number): boolean {
-      return recursiveTileCheck(muralId, userName, tiles);
-    }
-  
     async function joinMural(muralId: number): Promise<void> {
-      if (!canJoinMuralRecursive(muralId)) return;
+      if (!joinableMurals[muralId]) return;
       try {
         const { data, error } = await supabase.from('tiles').insert([
           {
             artistName: userName,
             muralId: muralId,
-            position: 0, // Placeholder, update logic for positioning
+            position: [0, 0], // Placeholder, update logic for positioning
             artistRegion: 'Unknown', // Update with actual user region if applicable
           },
         ]);
         if (error || !data) throw error;
-        tiles.push(data[0]); // Add the new tile to local state
+        joinableMurals[muralId] = false; // Update local state
       } catch (err) {
         console.error('Error joining mural:', err);
       }
     }
   
     onMount(async () => {
-      await Promise.all([fetchMurals(), fetchTiles()]);
+      await fetchMurals();
     });
   </script>
   
-  <select bind:value={sortBy} on:change={sortMurals} class = "select select-neutral">
+  <select bind:value={sortBy} on:change={fetchMurals} class="select select-neutral">
     <option value="createdAt">Oldest</option>
     <option value="remainingTiles">Remaining Tiles</option>
     <option value="hostName">Author Name</option>
     <option value="theme">Theme</option>
   </select>
-  <select bind:value={sortOrder} on:change={sortMurals} class = "select select-neutral">
+  <select bind:value={sortOrder} on:change={fetchMurals} class="select select-neutral">
     <option value="asc">Ascending</option>
     <option value="desc">Descending</option>
   </select>
@@ -103,14 +90,14 @@
     <p class="text-red-500">Error: {error}</p>
   {:else}
     <div class="grid grid-cols-3 gap-4 p-4">
-      {#each sortedMurals as mural}
+      {#each murals as mural}
         <div class="p-4 border rounded-lg shadow-lg">
           <h2 class="text-lg font-bold">{mural.hostName}'s Mural</h2>
           <p>Theme: {mural.theme}</p>
           <p>Remaining Tiles: {mural.remainingTiles}</p>
           <p>Status: {mural.finished ? 'Completed' : 'In Progress'}</p>
-          <button on:click={() => joinMural(mural.id)} disabled={!canJoinMuralRecursive(mural.id)} class="btn btn-primary">
-            {canJoinMuralRecursive(mural.id) ? 'Join Mural' : 'Already Contributed'}
+          <button on:click={() => joinMural(mural.id)} disabled={!joinableMurals[mural.id]} class="btn btn-primary">
+            {joinableMurals[mural.id] ? 'Join Mural' : 'Already Contributed'}
           </button>
         </div>
       {/each}
