@@ -1,10 +1,15 @@
 <script>
     let username = ""
     let region = ""
+
+    function CreateMural() { console.log("Going to CREATE MURAL page") }
+    function JoinMural() { console.log("Going to JOIN MURAL page") }
+    function ViewMurals() { console.log("Going to VIEW MURAL page") }
+
 </script>
 
 <div class="container">
-    <h1 class="text-8xl">LMUral Splash Page</h1>
+    <h1 class="text-8xl font-bold text-blue-300">LMUral Splash Page</h1>
     <!-- <p>
         Visit <a href="https://svelte.dev/docs/kit" target="_blank"
             >SvelteKit Documentation</a
@@ -33,12 +38,11 @@
 
     <!-- Game Option Container -->
     <div class="game_container">
-        <button class="btn btn-primary">Create New Mural</button>
-        <button class="btn btn-primary">Join Existing Mural</button>
-        <button class="btn btn-primary">View Finished Murals</button>
+        <button class="btn btn-primary" onclick="{CreateMural}">Create New Mural</button>
+        <button class="btn btn-primary" onclick="{JoinMural}">Join Existing Mural</button>
+        <button class="btn btn-primary" onclick="{ViewMurals}">View Finished Murals</button>
     </div>
 </div>
-
 
 <style>
     h1 {
