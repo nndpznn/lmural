@@ -58,7 +58,6 @@
         tileGrid[y][x] = { position: [x, y], content: tile.content };
         }
         
-        console.log(tileGrid[0][0].content)
         return { id: mural.id, dims: mural.dims, tiles: tileGrid };
     } catch (error) {
         console.error('Error fetching mural:', error);

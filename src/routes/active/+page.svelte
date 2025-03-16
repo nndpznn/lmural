@@ -54,6 +54,14 @@
     async function joinMural(muralId: number): Promise<void> {
       if (!joinableMurals[muralId]) return;
       try {
+        // get an available tile
+        //const { tiledata, tileerror } = await supabase
+        //.from('tiles')
+        //.select('position')
+        //.eq('muralId', muralId);
+        
+        //console.log(tiledata)
+
         const { data, error } = await supabase.from('tiles').insert([
           {
             artistName: userName,
@@ -83,7 +91,7 @@
   <select bind:value={sortOrder} on:change={fetchMurals} class="select select-neutral">
     <option value="asc">Ascending</option>
     <option value="desc">Descending</option>
-  </select>di
+  </select>
   
   {#if loading}
     <p>Loading murals...</p>
@@ -93,15 +101,17 @@
     <div class="grid grid-cols-3 gap-4 p-4">
       {#each murals as mural}
         <div class="p-4 border rounded-lg shadow-lg">
-          <h2 class="text-lg font-bold">{mural.hostName}'s Mural</h2>
-          <p>Theme: {mural.theme}</p>
-          <p>Remaining Tiles: {mural.remainingTiles}</p>
-          <p>Status: {mural.finished ? 'Completed' : 'In Progress'}</p>
-          <button on:click={() => joinMural(mural.id)} disabled={!joinableMurals[mural.id]} class="btn btn-primary">
-            {joinableMurals[mural.id] ? 'Join Mural' : 'Already Contributed'}
-          </button>
+          <div>
+            <h2 class="text-lg font-bold">{mural.hostName}'s Mural</h2>
+            <p>Theme: {mural.theme}</p>
+            <p>Remaining Tiles: {mural.remainingTiles}</p>
+            <p>Status: {mural.finished ? 'Completed' : 'In Progress'}</p>
+            <button on:click={() => joinMural(mural.id)} disabled={!joinableMurals[mural.id]} class="btn btn-primary">
+              {joinableMurals[mural.id] ? 'Join Mural' : 'Already Contributed'}
+            </button>
+          </div>
+          <MuralDisplay size=100 id={mural.id}/>
         </div>
       {/each}
     </div>
   {/if}
-  
