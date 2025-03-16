@@ -21,6 +21,8 @@
     <h1 class="text-[200px] font-bold text-center mt-20 title-container">LMURAL</h1>
 </div>
 
+<!-- <h1 class="text-[200px] text-[#0076A5] font-bold text-center mt-20">LMU</h1><h1 class="text-[200px] text-[#AB0C2F] font-bold text-center mt-20">RAL</h1> -->
+    
 
 <div class="general_container">
     <!-- Login Contatiner -->
@@ -28,10 +30,11 @@
         <input
             bind:value={username}
             type="text"
-            placeholder="Username"
-            class="input input-neutral"
+            placeholder="Name"
+            class="input input-neutral text-lg py-3 px-4"
         />
-        <select bind:value={region} class="select select-neutral">
+        <select bind:value={region} class="select select-neutral text-lg">
+            <option value="" disabled selected class="text-gray-500" >Select Region</option>
             <option value="Africa">Africa</option>
             <option value="Antarctica">Antarctica</option>
             <option value="Asia">Asia</option>
@@ -43,14 +46,14 @@
     </div>
 
     <!-- Game Option Container -->
-    <div class="game_container">
-        <button class="btn btn-primary bg-gray-500" onclick={CreateMural}
+    <div class="game_container flex justify-center">
+        <button class="btn btn-primary bg-[[#0076A5] text-2xl py-10 px-20" onclick={CreateMural} disabled={username === ""}
             >Create New Mural</button
         >
-        <button class="btn btn-primary bg-gray-500" onclick={JoinMural}
+        <button class="btn btn-primary bg-blue-400 text-2xl py-10 px-20" onclick={JoinMural} disabled={username === ""}
             >Join Existing Mural</button
         >
-        <button class="btn btn-primary bg-gray-500" onclick={ViewMurals}
+        <button class="btn btn-primary bg-blue-400 text-2xl py-10 px-20" onclick={ViewMurals} disabled={username === ""}
             >View Finished Murals</button
         >
     </div>
