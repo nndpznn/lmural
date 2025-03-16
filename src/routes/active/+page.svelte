@@ -1,119 +1,116 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
-    import { supabase } from '$lib/supabaseClient';
-    import Mural from '../../types/mural';
-    import MuralDisplay from "../../components/muraldisplay.svelte";
+  import { onMount } from "svelte";
+  import { supabase } from "$lib/supabaseClient";
+  import { goto } from "$app/navigation";
+  import Mural from "../../types/mural";
+  import MuralDisplay from "../../components/muraldisplay.svelte";
   
-    let murals: Mural[] = [];
-    let sortedMurals: Mural[] = [];
-    let sortBy: 'createdAt' | 'remainingTiles' | 'hostName' | 'theme' = 'createdAt';
-    let sortOrder: 'asc' | 'desc' = 'asc';
-    let userName: string = 'Guest'; // Replace with actual user handling
-    let loading: boolean = true;
-    let error: string | null = null;
-    let joinableMurals: Record<number, boolean> = {};
+  let murals: Mural[] = [];
+  let loading: boolean = true;
+  let error: string | null = null;
+  let userName: string = "Guest";
+  let availableTiles: Record<number, Set<string>> = {};
   
-    async function fetchMurals(): Promise<void> {
+  async function fetchMurals() {
       try {
-        const { data, error } = await supabase
-          .from('murals')
-          .select('*')
-          .order(sortBy, { ascending: sortOrder === 'asc' });
-        
-        if (error) throw error;
-        murals = data;
-        await updateJoinableMurals();
+          const { data, error } = await supabase.from("murals").select("*");
+          if (error) throw error;
+          murals = data;
+          await fetchAvailableTiles();
       } catch (err) {
-        error = (err as Error).message;
-        console.error('Error fetching murals:', err);
+          error = (err as Error).message;
+          console.error("Error fetching murals:", err);
       } finally {
-        loading = false;
+          loading = false;
       }
-    }
+  }
   
-    async function updateJoinableMurals(): Promise<void> {
-      const muralIds = murals.map(m => m.id);
+  async function fetchAvailableTiles() {
       try {
-        const { data, error } = await supabase
-          .from('tiles')
-          .select('muralId, artistName')
-          .in('muralId', muralIds)
-          .eq('artistName', userName);
-        
-        if (error) throw error;
-        const joinedMuralIds = new Set(data.map(tile => tile.muralId));
-        joinableMurals = murals.reduce((acc, mural) => {
-          acc[mural.id] = !joinedMuralIds.has(mural.id);
-          return acc;
-        }, {} as Record<number, boolean>);
+          const muralIds = murals.map(m => m.id);
+          const { data, error } = await supabase.from("tiles").select("muralId, position, artistName").in("muralId", muralIds);
+          if (error) throw error;
+          
+          availableTiles = murals.reduce((acc, mural) => {
+              acc[mural.id] = new Set();
+              return acc;
+          }, {} as Record<number, Set<string>>);
+          
+          data.forEach(tile => {
+              availableTiles[tile.muralId].add(JSON.stringify(tile.position));
+          });
       } catch (err) {
-        console.error('Error checking mural participation:', err);
+          console.error("Error fetching available tiles:", err);
       }
-    }
-  
-    async function joinMural(muralId: number): Promise<void> {
-      if (!joinableMurals[muralId]) return;
-      try {
-        // get an available tile
-        //const { tiledata, tileerror } = await supabase
-        //.from('tiles')
-        //.select('position')
-        //.eq('muralId', muralId);
-        
-        //console.log(tiledata)
+  }
 
-        // awful lazy code that should never have been written
-        randomTile = [Math.round(Math.random() * 1), Math.round(Math.random() * 1)]
-        const { data, error } = await supabase.from('tiles').insert([
-          {
-            artistName: userName,
-            muralId: muralId,
-            position: randomTile, // Placeholder, update logic for positioning
-            artistRegion: 'Unknown', // Update with actual user region if applicable
-          },
-        ]);
-        if (error || !data) throw error;
-        joinableMurals[muralId] = false; // Update local state
-      } catch (err) {
-        console.error('Error joining mural:', err);
-      }
-    }
-  
-    onMount(async () => {
-      await fetchMurals();
-    });
-  </script>
-  
-  <select bind:value={sortBy} on:change={fetchMurals} class="select select-neutral">
-    <option value="createdAt">Oldest</option>
-    <option value="remainingTiles">Remaining Tiles</option>
-    <option value="hostName">Author Name</option>
-    <option value="theme">Theme</option>
-  </select>
-  <select bind:value={sortOrder} on:change={fetchMurals} class="select select-neutral">
-    <option value="asc">Ascending</option>
-    <option value="desc">Descending</option>
-  </select>
-  
-  {#if loading}
-    <p>Loading murals...</p>
-  {:else if error}
-    <p class="text-red-500">Error: {error}</p>
-  {:else}
-    <div class="grid grid-cols-3 gap-4 p-4">
+  function goToDrawing(muralId: number, position: [number, number]) {
+      goto(`/draw/${muralId}/${position[0]}/${position[1]}`);
+  }
+
+  onMount(fetchMurals);
+</script>
+
+{#if loading}
+  <p>Loading murals...</p>
+{:else if error}
+  <p class="text-red-500">Error: {error}</p>
+{:else}
+  <div class="grid grid-cols-3 gap-4 p-4">
       {#each murals as mural}
-        <div class="p-4 border rounded-lg shadow-lg">
-          <div>
-            <h2 class="text-lg font-bold">{mural.hostName}'s Mural</h2>
-            <p>Theme: {mural.theme}</p>
-            <p>Remaining Tiles: {mural.remainingTiles}</p>
-            <p>Status: {mural.finished ? 'Completed' : 'In Progress'}</p>
-            <button on:click={() => joinMural(mural.id)} disabled={!joinableMurals[mural.id]} class="btn btn-primary">
-              {joinableMurals[mural.id] ? 'Join Mural' : 'Already Contributed'}
-            </button>
+          <div class="p-4 border rounded-lg shadow-lg">
+              <h2 class="text-lg font-bold">{mural.hostName}'s Mural</h2>
+              <p>Theme: {mural.theme}</p>
+              <p>Remaining Tiles: {mural.remainingTiles}</p>
+              <p>Status: {mural.finished ? "Completed" : "In Progress"}</p>
+              
+              <div class="grid-container" style="grid-template-columns: repeat({mural.dims[0]}, 40px);">
+                  {#each Array(mural.dims[1]).fill(0).map((_, y) => y) as y}
+                      {#each Array(mural.dims[0]).fill(0).map((_, x) => x) as x}
+                          <button 
+                              class="tile-button {availableTiles[mural.id].has(JSON.stringify([x, y])) ? 'occupied' : 'available'}"
+                              on:click={() => goToDrawing(mural.id, [x, y])}
+                              disabled={availableTiles[mural.id].has(JSON.stringify([x, y]))}
+                          >
+                              {x},{y}
+                          </button>
+                      {/each}
+                  {/each}
+              </div>
           </div>
-          <MuralDisplay size=100 id={mural.id}/>
-        </div>
       {/each}
-    </div>
-  {/if}
+  </div>
+{/if}
+
+<style>
+  .grid-container {
+      display: grid;
+      grid-gap: 4px;
+      margin-top: 10px;
+  }
+
+  .tile-button {
+      width: 40px;
+      height: 40px;
+      background: lightgray;
+      border: 1px solid #333;
+      cursor: pointer;
+      font-weight: bold;
+      text-align: center;
+      border-radius: 4px;
+  }
+
+  .tile-button.available {
+      color: black;
+      border: 2px solid black;
+  }
+
+  .tile-button.occupied {
+      background: darkgray;
+      cursor: not-allowed;
+  }
+
+  .tile-button:hover:not(.occupied) {
+      background: white;
+  }
+</style>
