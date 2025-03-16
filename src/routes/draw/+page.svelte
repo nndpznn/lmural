@@ -136,9 +136,6 @@
 
 </script>
 
-<!-- Background animation covering the whole screen -->
-<div id="canvas"></div>
-
 <audio loop id="tunes">
     <source src="/type_script.ogg" type="audio/ogg">
 </audio>
@@ -184,35 +181,10 @@
         margin: auto;
     }
 
-    /* Make background animation full-screen */
-    #canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgb(36, 70, 182) url("/background_overlay.png") top left;
-        background-size: auto;
-        background-repeat: repeat;
-        animation: panning 10s infinite linear;
-        z-index: -1;
-    }
-
     .draw {
         margin: auto;
         width: 50%;
         height: 25%;
     }
 
-    @keyframes panning {
-        0% {
-            background-position: 0px 0px;
-        }
-        50% {
-            background-position: 400px 200px;
-        }
-        100% {
-            background-position: 0px 600px;
-        }
-    }
 </style>
