@@ -68,7 +68,7 @@
           {
             artistName: userName,
             muralId: muralId,
-            position: [0, 0], // Placeholder, update logic for positioning
+            position: randomTile, // Placeholder, update logic for positioning
             artistRegion: 'Unknown', // Update with actual user region if applicable
           },
         ]);
