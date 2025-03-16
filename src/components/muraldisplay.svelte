@@ -1,7 +1,7 @@
 <script lang="ts">
     import '../types/mural.ts';
     
-    let {size} = $props();
+    let {size, id} = $props();
     let mural = null
 
     import { supabase } from '$lib/supabaseClient';
@@ -70,7 +70,7 @@
     let image_size = $state(0);
     let dims = $state([0,0])
     async function updateMural () {
-        mural = await fetchMuralWithTiles(1);
+        mural = await fetchMuralWithTiles(id);
         dims = mural.dims
         biggest_dim = (mural.dims[0] >= mural.dims[1]) ? mural.dims[0] : mural.dims[1];
         image_size = Math.round(size / biggest_dim);
