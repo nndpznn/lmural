@@ -1,20 +1,21 @@
 import { supabase } from "$lib/supabaseClient";
 
 class Tile {
-	id: number
+	id?: number
 	artistName: string
 	artistRegion: string
 	position: number
 	muralId: number
+	contentAddr: string
 
 	// content: // Custom Data Type to be added later
   
 	constructor(artistName: string, artistRegion: string, position: number, muralId: number) {
-	  this.id = 0
 	  this.artistName = artistName
 	  this.artistRegion = artistRegion
 	  this.position = position
 	  this.muralId = muralId
+	  this.contentAddr = ''
 
 	}
 
