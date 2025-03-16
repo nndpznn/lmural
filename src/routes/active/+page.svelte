@@ -11,6 +11,7 @@
   let userName: string = "Guest";
   let availableTiles: Record<number, Set<string>> = {};
   
+  function GoBack() {goto('/')}
   async function fetchMurals() {
       try {
           const { data, error } = await supabase.from("murals").select("*");
@@ -56,6 +57,9 @@
 {:else if error}
   <p class="text-red-500">Error: {error}</p>
 {:else}
+
+  <button class="btn btn-primary bg-blue-400 ml-10 mt-10 py-6 px-7" on:click={() => goto('/')}>Go Back</button>
+
   <div class="grid grid-cols-3 gap-4 p-4">
       {#each murals as mural}
           <div class="p-4 border rounded-lg shadow-lg">

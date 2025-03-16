@@ -43,9 +43,9 @@
 
 </script>
 
-<button class="btn btn-primary" onclick={GoBack}>Go Back</button>
+<button class="btn btn-primary bg-blue-400 ml-10 mt-10 py-6 px-7" onclick={GoBack}>Go Back</button>
 
-<div class="general">
+<div class="general flex">
     <div class="theme">
         <h1 class="text-5xl font-bold">Mural Theme</h1>
         <input bind:value={muralTheme} type="text" placeholder="Theme" class="input input-neutral">
@@ -59,7 +59,6 @@
             <option>4 x 4</option>
         </select>
     </div>
-    <p>{username}</p>
 
     <button class="btn btn-neutral" onclick={Create}>Create Mural</button>
     

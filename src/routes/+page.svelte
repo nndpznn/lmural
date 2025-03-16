@@ -18,13 +18,13 @@
 </script>
 
 <div style="text-align: center; margin-top: 50px">
-    <h1 class="text-[200px] font-bold text-center mt-20 title-container">LMURAL</h1>
+    <h1 class="text-[20vh] font-bold text-center mt-20 title-container">LMURAL</h1>
 </div>
 
 <!-- <h1 class="text-[200px] text-[#0076A5] font-bold text-center mt-20">LMU</h1><h1 class="text-[200px] text-[#AB0C2F] font-bold text-center mt-20">RAL</h1> -->
     
 
-<div class="general_container">
+<div class="general_container mt-20">
     <!-- Login Contatiner -->
     <div class="login_container">
         <input
@@ -46,14 +46,14 @@
     </div>
 
     <!-- Game Option Container -->
-    <div class="game_container flex justify-center">
-        <button class="btn btn-primary bg-[[#0076A5] text-2xl py-10 px-20" onclick={CreateMural} disabled={username === ""}
+    <div class="game_container flex justify-center mt-10">
+        <button class="btn btn-primary bg-blue-400 text-2xl py-10 px-[3vw]" onclick={CreateMural} disabled={username === ""}
             >Create New Mural</button
         >
-        <button class="btn btn-primary bg-blue-400 text-2xl py-10 px-20" onclick={JoinMural} disabled={username === ""}
+        <button class="btn btn-primary bg-blue-400 text-2xl py-10 px-[3vw]" onclick={JoinMural} disabled={username === ""}
             >Join Existing Mural</button
         >
-        <button class="btn btn-primary bg-blue-400 text-2xl py-10 px-20" onclick={ViewMurals} disabled={username === ""}
+        <button class="btn btn-primary bg-blue-400 text-2xl py-10 px-[3vw]" onclick={ViewMurals} disabled={username === ""}
             >View Finished Murals</button
         >
     </div>
