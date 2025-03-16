@@ -59,7 +59,7 @@
 <style>
     .title-container {
         display: inline-block; /* Ensures the animation doesn't affect layout */
-        animation: wobble 2s infinite ease-in-out;
+        animation: wobble 2s infinite ease;
     }
 
     @keyframes wobble {
