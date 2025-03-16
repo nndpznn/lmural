@@ -62,6 +62,8 @@
         
         //console.log(tiledata)
 
+        // awful lazy code that should never have been written
+        randomTile = [Math.round(Math.random() * 1), Math.round(Math.random() * 1)]
         const { data, error } = await supabase.from('tiles').insert([
           {
             artistName: userName,
