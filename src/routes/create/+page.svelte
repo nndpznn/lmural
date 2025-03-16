@@ -18,10 +18,20 @@
     $: dimensions = dimensionMap[dims] as [number, number];
     
     function GoBack() {goto('/')}
-    function Create() {
-        goto('/draw')
+    async function Create() {
         let mural = new Mural(username, region, dimensions, muralTheme);
-        mural.create()
+        const muralId = await mural.create()
+        console.log("MuralId:", muralId)
+        // goto(`/draw?username=${encodeURIComponent(username)}&region=${encodeURIComponent(region)}&muralId=${muralId}`)
+
+        localStorage.setItem("tileData", JSON.stringify({
+            artistName: username,
+            artistRegion: region,
+            position: [0,0],
+            muralId: muralId
+        }))
+
+        goto("/draw")
     }
 
     // Extract query params from the URL

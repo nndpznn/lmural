@@ -1,16 +1,37 @@
 <script lang="ts">
+    import { supabase } from '$lib/supabaseClient';
     import 'js-draw/bundledStyles';
     import { goto } from '$app/navigation';
     import {fade} from 'svelte/transition'
+    import Tile from '../../types/tile';
 
     let started_drawing = $state(false);
     let music_on = $state(true);
     let sound_on = $state(true);
-    let editor_reference = null;
+    let editor_reference: any = null;
 
     // thanks stackoverflow
     // https://stackoverflow.com/questions/69874742/sveltekit-console-error-window-is-not-defined-when-i-import-library
     //onMount();
+
+    async function uploadSVG(svgString: string, fileName: string) {
+    const blob = new Blob([svgString], { type: "image/svg+xml" });
+
+    const { data, error } = await supabase.storage
+        .from("tiles")
+        .upload(`${fileName}.svg`, blob, {
+            contentType: "image/svg+xml",
+            upsert: true,
+        });
+
+    if (error) {
+        console.error("Error uploading SVG:", error.message);
+        return null;
+    }
+
+    console.log("SVG uploaded successfully:", data);
+    return data;
+}
 
     async function startMural(ev: MouseEvent) {
         const draw_lib = (await import('js-draw'))
@@ -73,7 +94,30 @@
         }
 
         const svgElem = editor_reference.toSVG();
-        console.log('Saved SVG to:', svgElem.outerHTML);
+        const svgString = svgElem.outerHTML
+        console.log('Saving SVG to Supabase...');
+
+        const fileName = `mural_${Date.now()}`;
+
+        const tileData = localStorage.getItem("tileData")
+        if (tileData) {
+            const parsedTileData = JSON.parse(tileData)
+
+            uploadSVG(svgString, fileName).then((uploadData) => {
+                if (uploadData) {
+                    console.log("SVG stored at:", uploadData);
+                }
+
+                console.log("Creating tile instance...")
+                console.log("Tile data:", parsedTileData.artistName, parsedTileData.artistRegion, parsedTileData.position, parsedTileData.muralId)
+                const tile = new Tile(parsedTileData.artistName, parsedTileData.artistRegion, parsedTileData.position, parsedTileData.muralId)
+                tile.create()
+                goto("/") // later changed to mural details
+        
+            });
+        }
+
+        
 
         // FINISH THIS
     }

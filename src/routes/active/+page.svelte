@@ -2,6 +2,7 @@
     import { onMount } from 'svelte';
     import { supabase } from '$lib/supabaseClient';
     import Mural from '../../types/mural';
+    import MuralDisplay from "../../components/muraldisplay.svelte";
   
     let murals: Mural[] = [];
     let sortedMurals: Mural[] = [];
@@ -82,7 +83,7 @@
   <select bind:value={sortOrder} on:change={fetchMurals} class="select select-neutral">
     <option value="asc">Ascending</option>
     <option value="desc">Descending</option>
-  </select>
+  </select>di
   
   {#if loading}
     <p>Loading murals...</p>
